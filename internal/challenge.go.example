@@ -3,7 +3,7 @@ package dayxx_partx
 import (
 	"fmt"
 
-	registry "github.com/Baipyrus/AoC-24/internal"
+	"github.com/Baipyrus/AoC-24/internal/registry"
 )
 
 var name = "Day XX - Part X"

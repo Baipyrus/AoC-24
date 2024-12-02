@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	registry "github.com/Baipyrus/AoC-24/internal"
+	"github.com/Baipyrus/AoC-24/internal/registry"
 	"github.com/ktr0731/go-fuzzyfinder"
 )
 

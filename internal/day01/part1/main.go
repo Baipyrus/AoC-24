@@ -3,7 +3,7 @@ package day01_part1
 import (
 	"fmt"
 
-	registry "github.com/Baipyrus/AoC-24/internal"
+	"github.com/Baipyrus/AoC-24/internal/registry"
 )
 
 var name = "Day  1 - Part 1"
