@@ -1,14 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/Baipyrus/AoC-24/internal/inputs"
 	"github.com/Baipyrus/AoC-24/internal/registry"
 )
 
 func main() {
+	entry := time.Now()
 	challenges := registry.Get()
 
 	cwd, err := os.Getwd()
@@ -19,5 +22,13 @@ func main() {
 	exec := inputs.GetChallenge(challenges)
 	input := inputs.GetInput(cwd)
 
+	start := time.Now()
 	exec(input)
+
+	stop := time.Since(start).Microseconds()
+	total := time.Since(entry).Milliseconds()
+
+	fmt.Println("\nExecution time recorded at:")
+	fmt.Printf("Main: %d ms\n", total)
+	fmt.Printf("Challenge: %d μs\n", stop)
 }
