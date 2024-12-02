@@ -1,7 +1,12 @@
 package inputs
 
 import (
+	"io"
+	"io/fs"
 	"log"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/Baipyrus/AoC-24/internal/registry"
 	"github.com/ktr0731/go-fuzzyfinder"
@@ -24,4 +29,49 @@ func GetChallenge(challenges []registry.Challenge) func() {
 	}
 
 	return challenges[idx].Exec
+}
+
+func GetInput(path string) string {
+	var files []File
+
+	err := filepath.Walk(path, func(path string, info fs.FileInfo, err error) error {
+		name := info.Name()
+		isInput := strings.HasSuffix(name, ".txt")
+		if !isInput {
+			return nil
+		}
+
+		file, err := os.Open(path)
+
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		bytes, err := io.ReadAll(file)
+		if err != nil {
+			return err
+		}
+
+		files = append(
+			files,
+			File{
+				path,
+				string(bytes),
+			})
+
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	idx, err := fuzzyfinder.Find(
+		files,
+		func(i int) string {
+			return files[i].Path
+		},
+		fuzzyfinder.WithPromptString("Select Input File: "))
+
+	return files[idx].Content
 }
