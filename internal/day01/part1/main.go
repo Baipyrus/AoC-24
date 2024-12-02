@@ -2,9 +2,9 @@ package day01_part1
 
 import (
 	"fmt"
-	"regexp"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/Baipyrus/AoC-24/internal/registry"
 )
@@ -20,9 +20,9 @@ func Main(input string) {
 
 	var left, right []uint64
 
-	lines := regexp.MustCompile(`\r*\n`).Split(input, -1)
+	lines := strings.Split(input, "\n")
 	for _, line := range lines {
-		values := regexp.MustCompile(`\s+`).Split(line, -1)
+		values := strings.Split(line, "   ")
 		if len(values) != 2 {
 			continue
 		}
