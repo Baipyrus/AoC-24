@@ -71,7 +71,13 @@ func GetInput(path string) string {
 		func(i int) string {
 			return files[i].Path
 		},
-		fuzzyfinder.WithPromptString("Select Input File: "))
+		fuzzyfinder.WithPromptString("Select Input File: "),
+		fuzzyfinder.WithPreviewWindow(func(i, _, _ int) string {
+			if i == -1 {
+				return ""
+			}
+			return files[i].Content
+		}))
 
 	return files[idx].Content
 }
