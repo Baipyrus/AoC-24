@@ -12,6 +12,6 @@ func init() {
 	registry.Register(name, Main)
 }
 
-func Main() {
+func Main(input string) {
 	fmt.Printf("Executing: %s\n", name)
 }

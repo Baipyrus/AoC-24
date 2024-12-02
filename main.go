@@ -19,5 +19,5 @@ func main() {
 	exec := inputs.GetChallenge(challenges)
 	input := inputs.GetInput(cwd)
 
-	exec()
+	exec(input)
 }

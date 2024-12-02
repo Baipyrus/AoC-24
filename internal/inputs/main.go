@@ -17,7 +17,7 @@ type File struct {
 	Content string
 }
 
-func GetChallenge(challenges []registry.Challenge) func() {
+func GetChallenge(challenges []registry.Challenge) func(string) {
 	idx, err := fuzzyfinder.Find(
 		challenges,
 		func(i int) string {
