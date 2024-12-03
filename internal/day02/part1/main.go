@@ -29,7 +29,7 @@ func Main(input string) {
 		var (
 			direction int64
 			previous  uint64
-			safe      bool = true
+			safe      = true
 		)
 
 		for idx, report := range reports {
