@@ -16,4 +16,19 @@ func init() {
 func Main(input string) {
 	fmt.Printf("Executing: %s\n", name)
 
+	left, right := day01.ParseInput(input)
+
+	var sum uint64
+	for _, l := range left {
+		var count uint64
+		for _, r := range right {
+			if r == l {
+				count++
+			}
+		}
+
+		sum += count * l
+	}
+
+	fmt.Printf("Similarity score between lists: %d\n", sum)
 }
