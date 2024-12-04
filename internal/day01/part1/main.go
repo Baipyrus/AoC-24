@@ -3,9 +3,8 @@ package day01_part1
 import (
 	"fmt"
 	"slices"
-	"strconv"
-	"strings"
 
+	"github.com/Baipyrus/AoC-24/internal/day01"
 	"github.com/Baipyrus/AoC-24/internal/registry"
 )
 
@@ -18,21 +17,7 @@ func init() {
 func Main(input string) {
 	fmt.Printf("Executing: %s\n", name)
 
-	var left, right []uint64
-
-	lines := strings.Split(input, "\n")
-	for _, line := range lines {
-		values := strings.Split(line, "   ")
-		if len(values) != 2 {
-			continue
-		}
-
-		l, _ := strconv.ParseUint(values[0], 10, 64)
-		r, _ := strconv.ParseUint(values[1], 10, 64)
-
-		left = append(left, l)
-		right = append(right, r)
-	}
+	left, right := day01.ParseInput(input)
 
 	slices.Sort(left)
 	slices.Sort(right)
