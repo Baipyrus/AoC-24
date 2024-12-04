@@ -78,6 +78,9 @@ func GetInput(path string) string {
 			}
 			return files[i].Content
 		}))
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	return files[idx].Content
 }
