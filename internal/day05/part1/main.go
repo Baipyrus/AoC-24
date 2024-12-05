@@ -3,9 +3,8 @@ package day05_part1
 import (
 	"fmt"
 	"slices"
-	"strconv"
-	"strings"
 
+	"github.com/Baipyrus/AoC-24/internal/day05"
 	"github.com/Baipyrus/AoC-24/internal/registry"
 )
 
@@ -18,7 +17,7 @@ func init() {
 func Main(input string) {
 	fmt.Printf("Executing: %s\n", name)
 
-	ordering, updates := parseInput(input)
+	ordering, updates := day05.ParseInput(input)
 
 	/*
 		Unused code to extend rule chains:
@@ -107,42 +106,4 @@ func containsUintArr(array [][]uint64, value []uint64) bool {
 		// Requires 100% match of array
 		return true
 	})
-}
-
-func parseInput(input string) ([][]uint64, [][]uint64) {
-	lines := strings.Split(input, "\n")
-	var (
-		ordering [][]uint64
-		updates  [][]uint64
-		toggle   bool
-	)
-
-	for _, line := range lines {
-		// Blank-line to separate different inputs
-		if line == "" {
-			toggle = true
-			continue
-		}
-
-		// Get rules
-		if !toggle {
-			pages := strings.Split(line, "|")
-			l, _ := strconv.ParseUint(pages[0], 10, 64)
-			r, _ := strconv.ParseUint(pages[1], 10, 64)
-
-			ordering = append(ordering, []uint64{l, r})
-			continue
-		}
-
-		// Get updates
-		members := strings.Split(line, ",")
-		var pages []uint64
-		for _, page := range members {
-			v, _ := strconv.ParseUint(page, 10, 64)
-			pages = append(pages, v)
-		}
-		updates = append(updates, pages)
-	}
-
-	return ordering, updates
 }
