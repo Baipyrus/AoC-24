@@ -12,3 +12,15 @@ func (g *Grid) OutOfBounds(c Component) bool {
 
 	return xBound || yBound
 }
+
+func (g *Grid) Clone() *Grid {
+	var n Grid
+
+	n.Width = g.Width
+	n.Height = g.Height
+
+	n.Obstacles = make([]Component, len(g.Obstacles))
+	copy(n.Obstacles, g.Obstacles)
+
+	return &n
+}

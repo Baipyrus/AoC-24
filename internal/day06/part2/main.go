@@ -2,6 +2,7 @@ package day06_part2
 
 import (
 	"fmt"
+	// "slices"
 
 	"github.com/Baipyrus/AoC-24/internal/day06"
 	"github.com/Baipyrus/AoC-24/internal/registry"
@@ -29,6 +30,6 @@ func Main(input string) {
 
 	grid, guard := day06.ParseInput(input, symbols)
 
-	var count uint
-	fmt.Printf("Amount of possible obstructions: %d\n", count)
+	loops := guard.Loop(grid, directions)
+	fmt.Printf("Patrol area loops? %t\n", loops)
 }
