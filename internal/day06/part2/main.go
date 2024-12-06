@@ -25,9 +25,23 @@ func Main(input string) {
 	directions := [][]int{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
 
 	obst, p, face, w, h := parseInput(input, symbols)
-	distinct := runGuardPatrol(obst, directions, p, face, w, h)
 
-	fmt.Printf("Distinct positions in mapped area: %d\n", distinct)
+	var count uint
+	for j := range h {
+		for i := range w {
+			next := []int{i, j}
+			if containsIntArr(obst, next) {
+				continue
+			}
+
+			extras := append(obst, next)
+			if runGuardPatrol(extras, directions, p, face, w, h) {
+				count++
+			}
+		}
+	}
+
+	fmt.Printf("Amount of possible obstructions: %d\n", count)
 }
 
 func parseInput(input string, symbols [][]rune) ([][]int, []int, int, int, int) {
@@ -66,16 +80,29 @@ func parseInput(input string, symbols [][]rune) ([][]int, []int, int, int, int) 
 	return obstacles, position, orientation, width, height
 }
 
-func runGuardPatrol(obst, dirs [][]int, pos []int, face, w, h int) uint {
-	var path [][]int
+func runGuardPatrol(obst, dirs [][]int, pos []int, face, w, h int) bool {
+	var (
+		path  [][]int
+		iters uint64
+	)
 
 	for true {
+		iters++
+		// Stop if too many iterations
+		if iters >= 50_000 {
+			break
+		}
+
 		velocity := dirs[face]
 		nextPos := guardWalk(pos, velocity)
 
 		// Save position in path
-		if !containsIntArr(path, pos) {
-			path = append(path, pos)
+		curr := []int{face, pos[0], pos[1]}
+		if !containsIntArr(path, curr) {
+			path = append(path, curr)
+		} else {
+			// Detect loop
+			return true
 		}
 
 		// Rotate +90°
@@ -93,7 +120,7 @@ func runGuardPatrol(obst, dirs [][]int, pos []int, face, w, h int) uint {
 		pos = nextPos
 	}
 
-	return uint(len(path))
+	return false
 }
 
 func outOfBounds(pos []int, w, h int) bool {
