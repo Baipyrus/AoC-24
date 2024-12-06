@@ -3,6 +3,7 @@ package day06_part2
 import (
 	"fmt"
 
+	"github.com/Baipyrus/AoC-24/internal/day06"
 	"github.com/Baipyrus/AoC-24/internal/registry"
 )
 
@@ -14,4 +15,20 @@ func init() {
 
 func Main(input string) {
 	fmt.Printf("Executing: %s\n", name)
+
+	// symbols[0] = guard (must be in clockwise order)
+	// symbols[1] = obstacle
+	// symbols[2] = path
+	symbols := [][]rune{{'^', '>', 'v', '<'}, {'#'}, {'x'}}
+	// Direction to walk in for every guard symbol, in order
+	directions := []day06.Component{
+		{X: 0, Y: -1},
+		{X: 1, Y: 0},
+		{X: 0, Y: 1},
+		{X: -1, Y: 0}}
+
+	grid, guard := day06.ParseInput(input, symbols)
+
+	var count uint
+	fmt.Printf("Amount of possible obstructions: %d\n", count)
 }
