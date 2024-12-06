@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/Baipyrus/AoC-24/internal/day06"
 	"github.com/Baipyrus/AoC-24/internal/registry"
 )
 
@@ -58,21 +59,21 @@ func Main(input string) {
 
 	for true {
 		velocity := directions[orientation]
-		nextPos := guardWalk(position, velocity)
+		nextPos := day06.GuardWalk(position, velocity)
 
 		// Save position in path
-		if !containsIntArr(path, position) {
+		if !day06.ContainsIntArr(path, position) {
 			path = append(path, position)
 		}
 
 		// Rotate +90°
-		if containsIntArr(obstacles, nextPos) {
+		if day06.ContainsIntArr(obstacles, nextPos) {
 			orientation = (orientation + 1) % len(symbols[0])
 			continue
 		}
 
 		// Reached end
-		if outOfBounds(nextPos, width, height) {
+		if day06.OutOfBounds(nextPos, width, height) {
 			break
 		}
 
@@ -81,26 +82,4 @@ func Main(input string) {
 	}
 
 	fmt.Printf("Distinct positions in mapped area: %d\n", len(path))
-}
-
-func outOfBounds(pos []int, w, h int) bool {
-	xBound := pos[0] < 0 || pos[0] > w-1
-	yBound := pos[1] < 0 || pos[1] > h-1
-	return xBound || yBound
-}
-
-func guardWalk(pos, dir []int) []int {
-	return []int{pos[0] + dir[0], pos[1] + dir[1]}
-}
-
-func containsIntArr(array [][]int, value []int) bool {
-	return slices.ContainsFunc(array, func(member []int) bool {
-		// Compare elements
-		for idx, cur := range member {
-			if cur != value[idx] {
-				return false
-			}
-		}
-		return true
-	})
 }
