@@ -24,11 +24,18 @@ func Main(input string) {
 	// Direction to walk in for every guard symbol, in order
 	directions := [][]int{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
 
+	obst, p, face, w, h := parseInput(input, symbols)
+	distinct := runGuardPatrol(obst, directions, p, face, w, h)
+
+	fmt.Printf("Distinct positions in mapped area: %d\n", distinct)
+}
+
+func parseInput(input string, symbols [][]rune) ([][]int, []int, int, int, int) {
 	var (
-		obstacles, path [][]int
-		position        []int
-		width, height   int
-		orientation     int
+		obstacles     [][]int
+		position      []int
+		width, height int
+		orientation   int
 	)
 
 	upper := strings.ToLower(input)
@@ -56,31 +63,37 @@ func Main(input string) {
 		}
 	}
 
+	return obstacles, position, orientation, width, height
+}
+
+func runGuardPatrol(obst, dirs [][]int, pos []int, face, w, h int) uint {
+	var path [][]int
+
 	for true {
-		velocity := directions[orientation]
-		nextPos := guardWalk(position, velocity)
+		velocity := dirs[face]
+		nextPos := guardWalk(pos, velocity)
 
 		// Save position in path
-		if !containsIntArr(path, position) {
-			path = append(path, position)
+		if !containsIntArr(path, pos) {
+			path = append(path, pos)
 		}
 
 		// Rotate +90°
-		if containsIntArr(obstacles, nextPos) {
-			orientation = (orientation + 1) % len(symbols[0])
+		if containsIntArr(obst, nextPos) {
+			face = (face + 1) % 4
 			continue
 		}
 
 		// Reached end
-		if outOfBounds(nextPos, width, height) {
+		if outOfBounds(nextPos, w, h) {
 			break
 		}
 
 		// Move forward
-		position = nextPos
+		pos = nextPos
 	}
 
-	fmt.Printf("Distinct positions in mapped area: %d\n", len(path))
+	return uint(len(path))
 }
 
 func outOfBounds(pos []int, w, h int) bool {
