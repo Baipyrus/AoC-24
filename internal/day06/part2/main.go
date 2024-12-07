@@ -2,7 +2,7 @@ package day06_part2
 
 import (
 	"fmt"
-	// "slices"
+	"slices"
 
 	"github.com/Baipyrus/AoC-24/internal/day06"
 	"github.com/Baipyrus/AoC-24/internal/registry"
@@ -30,6 +30,27 @@ func Main(input string) {
 
 	grid, guard := day06.ParseInput(input, symbols)
 
-	loops := guard.Loop(grid, directions)
-	fmt.Printf("Patrol area loops? %t\n", loops)
+	var count uint64
+	for y := 0; y < grid.Height; y++ {
+		for x := 0; x < grid.Width; x++ {
+			pos := day06.Component{X: x, Y: y}
+
+			// Skip if there's already an obstacle or the guard is there
+			if slices.Contains(grid.Obstacles, pos) || guard.Position == pos {
+				continue
+			}
+
+			// Clone the grid and add a new obstacle
+			a := grid
+			a.Obstacles = append(a.Obstacles, pos)
+
+			// Clone the guard to avoid modifying its state
+			b := guard
+			if b.Loop(a, directions) {
+				count++
+			}
+		}
+	}
+
+	fmt.Printf("Amount of possible obstructions: %d\n", count)
 }
