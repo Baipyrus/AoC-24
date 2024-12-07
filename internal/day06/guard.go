@@ -37,24 +37,29 @@ func (g *Guard) Patrol(grid Grid, dirs []Component) int {
 	return len(path)
 }
 
+type Memory struct {
+	Position    Component
+	Orientation int
+}
+
 func (g *Guard) Loop(grid Grid, dirs []Component) bool {
-	var path []Memory
+	path := make(map[Memory]bool)
 
 	for true {
 		velocity := dirs[g.Orientation]
 		nextPos := AddComponents(g.Position, velocity)
+
+		// Save the current state
 		memory := Memory{
 			Position:    g.Position,
 			Orientation: g.Orientation,
 		}
 
-		// Save position in path
-		if !slices.Contains(path, memory) {
-			path = append(path, memory)
-		} else {
-			// Loop detected
+		// Loop detected
+		if path[memory] {
 			return true
 		}
+		path[memory] = true
 
 		// Rotate +90°
 		if slices.Contains(grid.Obstacles, nextPos) {
@@ -64,17 +69,10 @@ func (g *Guard) Loop(grid Grid, dirs []Component) bool {
 
 		// Reached end
 		if grid.OutOfBounds(nextPos) {
-			break
+			return false
 		}
 
 		// Move forward
 		g.Position = nextPos
 	}
-
-	return false
-}
-
-type Memory struct {
-	Position    Component
-	Orientation int
 }
