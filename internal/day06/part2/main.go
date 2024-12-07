@@ -36,9 +36,9 @@ func Main(input string) {
 
 func obstaclePlacements(grid day06.Grid, guard day06.Guard, directions []day06.Component) uint {
 	var count uint
-	for y := 0; y < grid.Height; y++ {
-		for x := 0; x < grid.Width; x++ {
-			pos := day06.Component{X: x, Y: y}
+	for j := range grid.Height {
+		for i := range grid.Width {
+			pos := day06.Component{X: i, Y: j}
 
 			// Skip if there's already an obstacle or the guard is there
 			if slices.Contains(grid.Obstacles, pos) || guard.Position == pos {
