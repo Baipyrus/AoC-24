@@ -29,8 +29,13 @@ func Main(input string) {
 		{X: -1, Y: 0}}
 
 	grid, guard := day06.ParseInput(input, symbols)
+	count := obstaclePlacements(grid, guard, directions)
 
-	var count uint64
+	fmt.Printf("Amount of possible obstructions: %d\n", count)
+}
+
+func obstaclePlacements(grid day06.Grid, guard day06.Guard, directions []day06.Component) uint {
+	var count uint
 	for y := 0; y < grid.Height; y++ {
 		for x := 0; x < grid.Width; x++ {
 			pos := day06.Component{X: x, Y: y}
@@ -51,6 +56,5 @@ func Main(input string) {
 			}
 		}
 	}
-
-	fmt.Printf("Amount of possible obstructions: %d\n", count)
+	return count
 }
