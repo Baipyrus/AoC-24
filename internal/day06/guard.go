@@ -10,7 +10,7 @@ type Guard struct {
 func (g *Guard) Patrol(grid Grid, dirs []Component) int {
 	var path []Component
 
-	for true {
+	for {
 		velocity := dirs[g.Orientation]
 		nextPos := AddComponents(g.Position, velocity)
 
@@ -27,14 +27,12 @@ func (g *Guard) Patrol(grid Grid, dirs []Component) int {
 
 		// Reached end
 		if grid.OutOfBounds(nextPos) {
-			break
+			return len(path)
 		}
 
 		// Move forward
 		g.Position = nextPos
 	}
-
-	return len(path)
 }
 
 type Memory struct {
@@ -45,7 +43,7 @@ type Memory struct {
 func (g *Guard) Loop(grid Grid, dirs []Component) bool {
 	path := make(map[Memory]bool)
 
-	for true {
+	for {
 		velocity := dirs[g.Orientation]
 		nextPos := AddComponents(g.Position, velocity)
 
