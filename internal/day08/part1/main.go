@@ -2,7 +2,6 @@ package day08_part1
 
 import (
 	"fmt"
-	"slices"
 
 	"github.com/Baipyrus/AoC-24/internal/day08"
 	"github.com/Baipyrus/AoC-24/internal/registry"
@@ -43,9 +42,8 @@ func CalculateAntinodes(grid *day08.Grid) {
 				// B - A + B
 
 				bound := grid.OutOfBounds(diff)
-				exists := slices.Contains(grid.Antinodes, diff)
-				if !bound && !exists {
-					grid.Antinodes = append(grid.Antinodes, diff)
+				if !bound {
+					grid.TryAddAntinode(diff)
 				}
 			}
 		}

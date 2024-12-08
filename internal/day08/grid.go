@@ -1,5 +1,7 @@
 package day08
 
+import "slices"
+
 type Grid struct {
 	Antinodes []Component
 	Antennas  []Antenna
@@ -25,4 +27,12 @@ func (g *Grid) GroupAntennas() map[rune][]Component {
 	}
 
 	return groups
+}
+
+func (g *Grid) TryAddAntinode(node Component) {
+	exists := slices.Contains(g.Antinodes, node)
+
+	if !exists {
+		g.Antinodes = append(g.Antinodes, node)
+	}
 }
