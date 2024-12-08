@@ -29,8 +29,8 @@ func ParseInput(input string, symbols [][]rune) (Grid, Guard) {
 				grid.Obstacles = append(grid.Obstacles, current)
 			}
 
-			if grid.Width < j+1 {
-				grid.Width = j + 1
+			if grid.Width < i+1 {
+				grid.Width = i + 1
 			}
 		}
 
