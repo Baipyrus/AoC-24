@@ -17,12 +17,12 @@ func Main(input string) {
 	fmt.Printf("Executing: %s\n", name)
 
 	grid := day08.ParseInput(input)
-	CalculateAntinodes(&grid)
+	calculateAntinodes(&grid)
 
 	fmt.Printf("Unique locations within bounds: %d\n", len(grid.Antinodes))
 }
 
-func CalculateAntinodes(grid *day08.Grid) {
+func calculateAntinodes(grid *day08.Grid) {
 	groups := grid.GroupAntennas()
 
 	for _, positions := range groups {
