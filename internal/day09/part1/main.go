@@ -2,8 +2,6 @@ package day09_part1
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
 
 	"github.com/Baipyrus/AoC-24/internal/registry"
 )
@@ -17,83 +15,86 @@ func init() {
 func Main(input string) {
 	fmt.Printf("Executing: %s\n", name)
 
-	blocks := readDiskBlocks(input)
-	compact := compactBlocks(blocks)
-	sum := calculateChecksum(compact)
+	filesystem := parseInput(input)
+	compactBlocks(&filesystem)
+	checksum := calcChecksum(filesystem)
 
-	fmt.Printf("Checksum of compacted disk blocks: %d\n", sum)
+	fmt.Printf("Checksum of compacted disk blocks: %d\n", checksum)
 }
 
-func calculateChecksum(input string) (sum int64) {
+func calcChecksum(fs []Block) (sum uint64) {
 	// Sum products of index and file id
-	for idx, char := range input {
-		if char == '.' {
+	for idx, file := range fs {
+		if file.Empty {
 			continue
 		}
 
-		id := int(char - '0')
-		prod := idx * id
-		sum += int64(prod)
+		sum += uint64(idx) * file.Id
 	}
 
 	return sum
 }
 
-func compactBlocks(input string) string {
-	blocks := []rune(input)
-
+func compactBlocks(fs *[]Block) {
 	// Find the left most free space
 	j := 0
-	for idx := range blocks {
-		if blocks[idx] == '.' {
+	for idx := range *fs {
+		if (*fs)[idx].Empty {
 			j = idx
 			break
 		}
 	}
 
 	// Swap file blocks with free spaces, if any
-	i := len(blocks) - 1
+	i := len(*fs) - 1
 	for i > j {
-		if blocks[i] != '.' {
-			blocks[j], blocks[i] = blocks[i], '.'
+		current := (*fs)[i]
+		if !current.Empty {
+			(*fs)[j] = current
+			(*fs)[i].Empty = true
 
 			// Find the next free space
-			for j < len(blocks) && blocks[j] != '.' {
+			for j < len(*fs) && !(*fs)[j].Empty {
 				j++
 			}
 		}
 		i--
 	}
-
-	return string(blocks)
 }
 
-func readDiskBlocks(input string) string {
-	var (
-		blocks strings.Builder
-		id     uint64
-	)
+func parseInput(input string) (fs []Block) {
+	var id uint64
 
 	for idx, char := range input {
 		// Invalid character
 		if char < '0' || char > '9' {
 			continue
 		}
-		amount := int(char - '0')
 
-		if idx%2 == 0 {
-			// Append id to string x amount of times
-			blocks.WriteString(strings.Repeat(
-				strconv.FormatUint(id, 10),
-				amount))
+		amount := uint64(char - '0')
+		empty := idx%2 == 1
 
-			id++
-			continue
+		// Expanding files into blocks early
+		for range amount {
+			file := Block{Empty: true}
+
+			if !empty {
+				file.Empty = false
+				file.Id = id
+			}
+
+			fs = append(fs, file)
 		}
 
-		// Append free space, if any
-		blocks.WriteString(strings.Repeat(".", amount))
+		if !empty {
+			id++
+		}
 	}
 
-	return blocks.String()
+	return fs
+}
+
+type Block struct {
+	Id    uint64
+	Empty bool
 }
