@@ -3,6 +3,8 @@ package day09_part2
 import (
 	"fmt"
 	"slices"
+	// "strconv"
+	// "strings"
 
 	"github.com/Baipyrus/AoC-24/internal/registry"
 )
@@ -17,11 +19,32 @@ func Main(input string) {
 	fmt.Printf("Executing: %s\n", name)
 
 	filesystem := parseInput(input)
-	compactBlocks(&filesystem)
-	checksum := calcChecksum(filesystem)
+	// fmt.Println(fsToString(filesystem))
 
+	compactBlocks(&filesystem)
+	// fmt.Println(fsToString(filesystem))
+
+	checksum := calcChecksum(filesystem)
 	fmt.Printf("Checksum of compacted disk blocks: %d\n", checksum)
 }
+
+// func fsToString(fs []File) string {
+// 	var builder strings.Builder
+//
+// 	for _, file := range fs {
+// 		for range file.Size {
+// 			if file.Empty {
+// 				builder.WriteString(".")
+// 				continue
+// 			}
+//
+// 			id := strconv.FormatUint(file.Id, 10)
+// 			builder.WriteString(id)
+// 		}
+// 	}
+//
+// 	return builder.String()
+// }
 
 func calcChecksum(fs []File) (sum uint64) {
 	// Sum products of index and file id
