@@ -98,12 +98,9 @@ func parseInput(input string) (fs []Block) {
 
 		// Expanding files into blocks early
 		for range amount {
-			file := Block{Empty: true}
-
-			if !empty {
-				file.Empty = false
-				file.Id = id
-			}
+			file := Block{
+				Empty: empty,
+				Id:    id}
 
 			fs = append(fs, file)
 		}
