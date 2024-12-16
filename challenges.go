@@ -20,4 +20,5 @@ import (
 	_ "github.com/Baipyrus/AoC-24/internal/day09/part1"
 	_ "github.com/Baipyrus/AoC-24/internal/day09/part2"
 	_ "github.com/Baipyrus/AoC-24/internal/day10/part1"
+	_ "github.com/Baipyrus/AoC-24/internal/day10/part2"
 )
