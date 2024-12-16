@@ -28,14 +28,14 @@ func traverse(grid day10.Grid) (sum uint64) {
 	heads := grid.GetFaces(0)
 
 	for _, cell := range heads {
-		tails := dijkstra(grid, cell)
-		sum += uint64(len(tails))
+		rating := dijkstra(grid, cell)
+		sum += rating
 	}
 
 	return sum
 }
 
-func dijkstra(grid day10.Grid, start *day10.Component) (tails []*day10.Component) {
+func dijkstra(grid day10.Grid, start *day10.Component) uint64 {
 	// Initialize cell values
 	for _, cell := range grid.Cells {
 		cell.Distance = math.MaxUint64
@@ -43,6 +43,7 @@ func dijkstra(grid day10.Grid, start *day10.Component) (tails []*day10.Component
 	}
 	start.Distance = 0
 	queue := append([]*day10.Component{}, grid.Cells...)
+	var tails []*day10.Component
 
 	// Scan neighbors of queued elements
 	for len(queue) > 0 {
@@ -75,5 +76,5 @@ func dijkstra(grid day10.Grid, start *day10.Component) (tails []*day10.Component
 		}
 	}
 
-	return tails
+	return uint64(len(tails))
 }
