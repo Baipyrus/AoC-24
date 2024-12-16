@@ -2,10 +2,7 @@ package day10_part2
 
 import (
 	"fmt"
-	"math"
-	"slices"
 
-	"github.com/Baipyrus/AoC-24/internal/day10"
 	"github.com/Baipyrus/AoC-24/internal/registry"
 )
 
