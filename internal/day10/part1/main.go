@@ -18,14 +18,14 @@ func init() {
 func Main(input string) {
 	fmt.Printf("Executing: %s\n", name)
 
-	grid := parseInput(input)
+	grid := ParseInput(input)
 	sum := traverse(grid)
 
 	fmt.Printf("Sum of trailhead scores on map: %d\n", sum)
 }
 
 func traverse(grid Grid) (sum uint64) {
-	heads := getCellsByFace(grid.Cells, 0)
+	heads := grid.GetFaces(0)
 
 	for _, cell := range heads {
 		tails := dijkstra(grid, cell)
@@ -47,10 +47,10 @@ func dijkstra(grid Grid, start *Component) (tails []*Component) {
 	// Scan neighbors of queued elements
 	for len(queue) > 0 {
 		// Get and remove closest cell
-		current := getClosest(queue)
-		removeCell(&queue, current)
+		current := GetClosest(queue)
+		RemoveCell(&queue, current)
 
-		for _, next := range getNeighbors(grid, current) {
+		for _, next := range grid.GetNeighbors(current) {
 			// Ignore already scanned
 			scope := !slices.Contains(queue, next)
 			// Ignore established ends
@@ -78,73 +78,7 @@ func dijkstra(grid Grid, start *Component) (tails []*Component) {
 	return tails
 }
 
-func getNeighbors(grid Grid, cell *Component) (output []*Component) {
-	x, y := int(cell.X), int(cell.Y)
-
-	for _, dy := range []int{-1, 0, 1} {
-		for _, dx := range []int{-1, 0, 1} {
-			// Ignore self and diagonal
-			sum := dx*dx + dy*dy
-			if sum != 1 {
-				continue
-			}
-
-			nx, ny := x+dx, y+dy
-
-			// Detect out of bounds
-			xBound := nx < 0 || nx >= int(grid.Width)
-			yBound := ny < 0 || ny >= int(grid.Height)
-			if xBound || yBound {
-				continue
-			}
-
-			next := grid.GetCell(nx, ny)
-			output = append(output, next)
-		}
-	}
-
-	return output
-}
-
-func removeCell(cells *[]*Component, cell *Component) {
-	// Detect cell in slice
-	idx := slices.Index(*cells, cell)
-	if idx == -1 {
-		return
-	}
-
-	// Remove out of order (overwrite at idx, pop last)
-	(*cells)[idx] = (*cells)[len(*cells)-1]
-	*cells = (*cells)[:len(*cells)-1]
-}
-
-func getClosest(cells []*Component) *Component {
-	current := cells[0]
-
-	for _, cell := range cells {
-		if cell.Distance >= current.Distance {
-			continue
-		}
-
-		current = cell
-	}
-
-	return current
-}
-
-func getCellsByFace(input []*Component, face uint64) (output []*Component) {
-	for _, cell := range input {
-		if cell.Value != face {
-			continue
-		}
-
-		output = append(output, cell)
-	}
-
-	return output
-}
-
-func parseInput(input string) (grid Grid) {
+func ParseInput(input string) (grid Grid) {
 	lines := strings.Split(input, "\n")
 
 	for j, line := range lines {
@@ -183,14 +117,30 @@ type Component struct {
 	Parent   *Component
 }
 
-func (c *Component) Println() {
-	fmt.Printf(
-		"%p> X: %d, Y: %d, V: %d, D: %d, P: %p\n",
-		c, c.X, c.Y,
-		c.Value,
-		c.Distance,
-		c.Parent,
-	)
+func RemoveCell(cells *[]*Component, cell *Component) {
+	// Detect cell in slice
+	idx := slices.Index(*cells, cell)
+	if idx == -1 {
+		return
+	}
+
+	// Remove out of order (overwrite at idx, pop last)
+	(*cells)[idx] = (*cells)[len(*cells)-1]
+	*cells = (*cells)[:len(*cells)-1]
+}
+
+func GetClosest(cells []*Component) *Component {
+	current := cells[0]
+
+	for _, cell := range cells {
+		if cell.Distance >= current.Distance {
+			continue
+		}
+
+		current = cell
+	}
+
+	return current
 }
 
 type Grid struct {
@@ -201,4 +151,44 @@ type Grid struct {
 
 func (g *Grid) GetCell(x, y int) *Component {
 	return g.Cells[y*int(g.Width)+x]
+}
+
+func (g *Grid) GetNeighbors(cell *Component) (output []*Component) {
+	x, y := int(cell.X), int(cell.Y)
+
+	for _, dy := range []int{-1, 0, 1} {
+		for _, dx := range []int{-1, 0, 1} {
+			// Ignore self and diagonal
+			sum := dx*dx + dy*dy
+			if sum != 1 {
+				continue
+			}
+
+			nx, ny := x+dx, y+dy
+
+			// Detect out of bounds
+			xBound := nx < 0 || nx >= int(g.Width)
+			yBound := ny < 0 || ny >= int(g.Height)
+			if xBound || yBound {
+				continue
+			}
+
+			next := g.GetCell(nx, ny)
+			output = append(output, next)
+		}
+	}
+
+	return output
+}
+
+func (g *Grid) GetFaces(face uint64) (output []*Component) {
+	for _, cell := range g.Cells {
+		if cell.Value != face {
+			continue
+		}
+
+		output = append(output, cell)
+	}
+
+	return output
 }
