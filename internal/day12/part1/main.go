@@ -18,15 +18,21 @@ func Main(input string) {
 	fmt.Printf("Executing: %s\n", name)
 
 	regions := parseInput(input)
-	var price uint
+	var sum uint
 
+	fmt.Printf("Amount of Regions: %d\n", len(regions))
 	for _, r := range regions {
 		area := uint(len(r.Plots))
-		current := area * r.Perimeter()
-		price += current
+		perimeter := r.Perimeter()
+		price := area * perimeter
+		sum += price
+
+		fmt.Println()
+		r.Println()
+		fmt.Printf("Price of Region: %d * %d = %d\n", area, perimeter, price)
 	}
 
-	fmt.Printf("Total price of fencing all regions: %d\n", price)
+	fmt.Printf("Total price of fencing all regions: %d\n", sum)
 }
 
 func parseInput(input string) (regions []*Region) {
